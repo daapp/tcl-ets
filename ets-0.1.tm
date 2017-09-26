@@ -1,3 +1,10 @@
+# (c) 2017 Alexander Danilov <alexander.a.danilov@gmail.com> This
+# module provide ets command, which implement ETS like storage from
+# Erlang into Tcl environment. This module is example for
+# tcl-connectedThread.
+# Example of ets usage at the end of this file.
+# Only few ETS commands implemented now: new, insert, lookup.
+
 package require snit
 package require connectedThread
 
@@ -68,7 +75,7 @@ snit::type ets {
 }
 
 
-if 1 {
+if 0 {
     proc showResponse {tid response} {
         puts "$tid :: $response"
     }
