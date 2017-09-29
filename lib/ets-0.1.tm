@@ -48,6 +48,20 @@ snit::type ets {
                         }
                     }
 
+                    delete {
+                        # $ets delete tabName
+                        # or
+                        # $ets delete tabName key
+                        set rest [lassign $rest table key]
+                        if {[dict exists $storage $table]} {
+                            set storage [dict unset storage $table $key]
+                            puts "storage=$storage"
+                            thread::send [list ok]
+                        } else {
+                            thread::send [list error "$table not found"]
+                        }
+                    }
+
                     default {
                         thread::send [list error "invalid action \"$action\" $rest"]
                     }
@@ -71,29 +85,9 @@ snit::type ets {
         $etsCmd send [list lookup $tab $key]
     }
 
-    delegate method id to etsCmd
-}
-
-
-if 0 {
-    proc showResponse {tid response} {
-        puts "$tid :: $response"
+    method delete {tab key} {
+        $etsCmd send [list delete $tab $key]
     }
 
-    puts "create ets"
-    ets e -name hello -command showResponse
-    puts [e id]
-    puts "create table tab1"
-    e new tab1
-    puts "insert key1"
-    e insert tab1 key1 value1
-    e insert tab1 key2 value2
-    puts "lookup"
-    e lookup tab1 key2
-    e lookup tab1 key1
-    e lookup tab2 k
-    e lookup tab1 key*
-
-    puts "wait ..."
-    vwait forever
+    delegate method id to etsCmd
 }
